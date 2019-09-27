@@ -1,0 +1,183 @@
+# To test with http://editor.swagger.io/
+openapi: 3.0.0
+info:
+  title: TrikTrak Spotify API
+  description: API Draft for TrikTrak Spotify
+  version: 0.1.0
+paths:
+  /users:
+    post:
+      summary: Link a user to a spotify account
+      tags:
+      - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                authorization_code:
+                  type: string
+              required:
+              - user_id
+              - authorization_code
+      responses:
+        '200':    # status code
+          description: Linked Spotify users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyUser'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/MissingParam'
+  /users/{id}:
+    get:
+      summary: Get user
+      tags:
+      - Auth
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: ID of the user
+      responses:
+        '200':    # status code
+          description: Linked Spotify users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotifyUser'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/MissingParam'
+components:
+  headers:
+    ClientVersion:
+      schema:
+        type: integer
+        description: Client version
+    OsVersion:
+      schema:
+        type: string
+        description: OS version
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    MissingParam:
+      description: A parameter is missing
+    NotFound:
+      description: Resource not found
+    BadRequest:
+      description: Bad request
+    BadParametersError:
+      description: Unprocessable entity
+    UnauthorizedAccess:
+      description: User cannot access this resource
+    TooManyRequests:
+      description: User sent too many requests
+  schemas:
+    SpotifyUser:
+      description: SpotifyUser's profile
+      type: object
+      properties:
+        last_update_date:
+          type: string
+        artists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artist'
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Album'
+    Artist:
+      description: A Spotify artist
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        genres:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+      example:
+        name: "Artist"
+        type: "artist"
+        genres:
+          - "pop"
+          - "rock"
+        url: "https://www.spotify.com"
+        images:
+          - height: 40
+            width: 40
+            url: "http://images.triktrak.co/40x40_d0aads-sfea.jpg"
+          - height: 80
+            width: 80
+            url: "http://images.triktrak.co/80x80_d0aads-sfea.jpg"
+    Album:
+      description: A Spotify album
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        album_type:
+          type: string
+        url:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        artists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artist'
+      example:
+        name: "Album name"
+        type: "album"
+        album_type: "single"
+        url: "https://www.spotify.com"
+        images:
+          - height: 40
+            width: 40
+            url: "http://images.triktrak.co/40x40_d0aads-sfea.jpg"
+          - height: 80
+            width: 80
+            url: "http://images.triktrak.co/80x80_d0aads-sfea.jpg"
+    Image:
+      description: Spotify image
+      type: object
+      properties:
+        height:
+          type: integer
+        width:
+          type: integer
+        url:
+          type: string
+      example:
+        height: 480
+        width: 480
+        url: "https://www.spotify.com"
