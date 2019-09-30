@@ -13,10 +13,12 @@ const self = {
             existingUser = new SpotifyUserModel({_userId: userId});
         }
         const spotifyTokens = await SpotifyService.getAccessAndRefreshTokens(code);
+        const userTops = await SpotifyService.getUserTops(spotifyTokens.refresh_token);
         existingUser.access_token = spotifyTokens.access_token;
         existingUser.refresh_token = spotifyTokens.refresh_token;
-        await existingUser.save();
-        return await SpotifyService.getUserTops(existingUser.refresh_token);
+        existingUser.tracks = userTops.tracks;
+        existingUser.artists = userTops.artists;
+        return await existingUser.save();
     },
     getUserTops: async(userId) => {
         let user = await SpotifyUserModel.findOne({_userId: userId});
@@ -24,7 +26,10 @@ const self = {
             Logger.error(`index.ctrl.js\t User {${userId}} not found`);
             throw new Error("User not found");
         }
-        return await SpotifyService.getUserTops(user.refresh_token);
+        const userTops = await SpotifyService.getUserTops(user.refresh_token);
+        user.tracks = userTops.tracks;
+        user.artists = userTops.artists;
+        return await user.save();
     },
 };
 
