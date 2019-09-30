@@ -20,6 +20,18 @@ const self = {
         existingUser.artists = userTops.artists;
         return await existingUser.save();
     },
+    delinkUser: async (req, res) => {
+        let existingUser = await SpotifyUserModel.findOne({_userId: req.params.id});
+        if (!existingUser) {
+            return res.status(404).send('User not found');
+        }
+        existingUser.access_token = null;
+        existingUser.refresh_token = null;
+        existingUser.tracks = [];
+        existingUser.artists = [];
+        await existingUser.save();
+        return res.send();
+    },
     getUserTops: async(userId) => {
         let user = await SpotifyUserModel.findOne({_userId: userId});
         if(!user) {

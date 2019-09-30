@@ -36,17 +36,33 @@ paths:
         '422':
           $ref: '#/components/responses/MissingParam'
   /users/{id}:
+    delete:
+      summary: Get user
+      tags:
+        - Auth
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the user to de-link
+      responses:
+        '200':    # status code
+          description: User de-linked
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
     get:
       summary: Get user
       tags:
-      - Auth
+        - Auth
       parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-        description: ID of the user
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the user
       responses:
         '200':    # status code
           description: Linked Spotify users

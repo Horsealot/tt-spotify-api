@@ -16,6 +16,7 @@ module.exports = (router) => {
             res.status(503).send({error: err.message});
         });
     });
+    router.delete('/users/:id', IndexController.delinkUser);
     router.get('/users/:id', (req, res, next) => {
         IndexController.getUserTops(req.params.id).then((user) => {
             res.send({
