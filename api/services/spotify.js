@@ -33,9 +33,9 @@ const self = {
         spotifyApi.setRefreshToken(refresh_token);
         try {
             const freshAccessToken = await spotifyApi.refreshAccessToken();
+            spotifyApi.setAccessToken(freshAccessToken.body['access_token']);
             const userTopArtists = await spotifyApi.getMyTopArtists();
             const userTopTracks = await spotifyApi.getMyTopTracks();
-            spotifyApi.setAccessToken(freshAccessToken.body['access_token']);
             return {
                 artists: userTopArtists.body.items,
                 tracks: userTopTracks.body.items
