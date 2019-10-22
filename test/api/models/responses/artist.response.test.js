@@ -17,12 +17,13 @@ describe('Track Response', () => {
             expired_at: new Date(),
             source: 'private_source',
             public_source: 'public_source',
+            genres: ['ROCK']
         });
         expect(artistResponse).to.be.an('object');
         expect(artistResponse).to.have.property('name');
         expect(artistResponse).to.have.property('type');
         expect(artistResponse).to.have.property('images');
-        expect(artistResponse).to.have.property('genre');
+        expect(artistResponse).to.have.property('genres');
         expect(artistResponse).to.have.property('url');
         done();
     });

@@ -10,7 +10,6 @@ const expect = chai.expect;
 const AlbumResponse = require('@models/responses/album.response');
 
 describe('Album Response', () => {
-
     it('should return the right object', (done) => {
         const albumResponse = new AlbumResponse({
             created_at: new Date(),

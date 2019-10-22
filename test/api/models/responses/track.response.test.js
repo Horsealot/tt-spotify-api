@@ -16,7 +16,7 @@ describe('Track Response', () => {
             created_at: new Date(),
             expired_at: new Date(),
             source: 'private_source',
-            public_source: 'public_source',
+            public_source: 'public_source'
         });
         expect(trackResponse).to.be.an('object');
         expect(trackResponse).to.have.property('artists');
